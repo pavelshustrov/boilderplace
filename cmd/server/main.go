@@ -1,16 +1,18 @@
 package main
 
 import (
+	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/newrelic/go-agent/v3/integrations/nrgorilla"
+	"github.com/newrelic/go-agent/v3/newrelic"
+
 	"boilerplate/internal/database"
 	barHandler "boilerplate/internal/handlers/bar"
 	fooHandler "boilerplate/internal/handlers/foo"
 	barRepo "boilerplate/internal/repositiories/bar"
 	barService "boilerplate/internal/services/bar"
 	"boilerplate/internal/services/foo"
-	"github.com/gorilla/mux"
-	"github.com/newrelic/go-agent/v3/integrations/nrgorilla"
-	"github.com/newrelic/go-agent/v3/newrelic"
-	"net/http"
 )
 
 func main() {
@@ -21,8 +23,8 @@ func main() {
 	}
 
 	dbPool := database.NewDBPool()
-
 	client := http.DefaultClient
+
 	fooService := foo.New(client)
 	fHandler := fooHandler.New(fooService)
 
@@ -35,4 +37,6 @@ func main() {
 
 	router.HandleFunc("/foo", fHandler.Handle)
 	router.HandleFunc("/bar", bHandler.Handle)
+
+	http.ListenAndServe("", router)
 }

@@ -3,6 +3,7 @@ module boilerplate
 go 1.17
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/gorilla/mux v1.8.0
 	github.com/jackc/pgx/v4 v4.15.0
 	github.com/newrelic/go-agent/v3 v3.3.0

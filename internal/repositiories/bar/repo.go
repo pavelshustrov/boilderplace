@@ -8,6 +8,8 @@ import (
 	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
+const FindUserByBars = "select name from users where bar = ?"
+
 type Repository interface {
 	BeginTx(ctx context.Context, opts *sql.TxOptions) (*sql.Tx, error)
 	QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error)
@@ -30,7 +32,7 @@ func (r *repo) FindUserByBars(ctx context.Context, bar string) ([]*User, error) 
 	defer txn.End()
 
 	ctx = newrelic.NewContext(ctx, txn)
-	rows, err := r.db.QueryContext(ctx, "select name from users where bar = $1", bar)
+	rows, err := r.db.QueryContext(ctx, FindUserByBars, bar)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, nil
